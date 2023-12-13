@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
-import {TaskList} from './src/navigation/TaskList/TaskList';
+import {TaskList} from './src/components/TaskList/TaskList';
 
 export const App = () => {
   return (
