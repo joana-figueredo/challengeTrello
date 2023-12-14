@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 export type TaskProps = {
   title: string;
@@ -12,9 +12,19 @@ export type TaskProps = {
 export const Task = ({title, status, date, style}: TaskProps) => {
   return (
     <View style={[styles.card, style]}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.status}>Status: {status}</Text>
-      <Text style={styles.date}>{date}</Text>
+      <View style={styles.right}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.status}>Status: {status}</Text>
+        <Text style={styles.date}>{date}</Text>
+      </View>
+      <View style={styles.left}>
+        <TouchableOpacity>
+          <Text style={styles.edit}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text>Remove</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -24,9 +34,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0D6F9',
     margin: 10,
     borderRadius: 5,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     height: 70,
     paddingHorizontal: 10,
+    flexDirection: 'row',
+  },
+  right: {
+    paddingVertical: 5,
   },
   title: {
     fontWeight: '600',
@@ -40,5 +54,13 @@ const styles = StyleSheet.create({
   date: {
     fontWeight: '400',
     fontSize: 14,
+  },
+  left: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    paddingVertical: 5,
+  },
+  edit: {
+    paddingHorizontal: 10,
   },
 });
