@@ -1,6 +1,13 @@
 import React from 'react';
 
-import {StyleSheet, Text, View, StatusBar} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import {Task} from '../Task/Task';
 import data from '../../testHelpers/moks/trello.json';
 
@@ -13,16 +20,20 @@ export const TaskList = () => {
       </View>
       <View style={styles.backgroundListCards}>
         <View style={styles.addCard}>
-          <Text style={styles.textAddCard}>Add a card</Text>
+          <TouchableOpacity>
+            <Text style={styles.textAddCard}>Add a card</Text>
+          </TouchableOpacity>
         </View>
-        {data.map(item => (
-          <Task
-            style={styles.task}
-            title={item.name}
-            status={item.status}
-            date={item.data}
-          />
-        ))}
+        <ScrollView>
+          {data.map(item => (
+            <Task
+              style={styles.task}
+              title={item.name}
+              status={item.status}
+              date={item.data}
+            />
+          ))}
+        </ScrollView>
       </View>
     </View>
   );
@@ -48,6 +59,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16.0,
 
     elevation: 24,
+    padding: 20,
   },
   yourTasks: {
     color: '#210440',
@@ -63,14 +75,15 @@ const styles = StyleSheet.create({
   addCard: {
     backgroundColor: '#F0D6F9',
     margin: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     justifyContent: 'center',
+    height: 30,
   },
   textAddCard: {
     textAlign: 'center',
     color: 'black',
   },
   task: {
-    marginTop: 10,
+    marginTop: 2,
   },
 });
