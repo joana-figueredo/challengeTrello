@@ -9,16 +9,37 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
+  TextInput,
 } from 'react-native';
 import {Task} from '../Task/Task';
 import data from '../../testHelpers/moks/trello.json';
 
+type Tasks = {
+  id: number;
+  name: string;
+  status: string;
+  data: string;
+}[];
+
 export const TaskList = () => {
   const [showModal, setShowModal] = useState(false);
-  const [tasks, setTasks] = useState(data);
+  const [tasks, setTasks] = useState<Tasks>(data);
+  const [textName, onChangeTextName] = React.useState('');
+  const [textStatus, onChangeTextStatus] = React.useState('');
+  const [textData, onChangeTextData] = React.useState('');
 
-  const addCard = () => {
+  const modalAddNewTask = () => {
     setShowModal(true);
+  };
+
+  const addTask = () => {
+    tasks.push({
+      id: 6,
+      data: textData,
+      name: textName,
+      status: textStatus,
+    });
+    setShowModal(false);
   };
 
   const removeCard = (id: number) => {
@@ -36,7 +57,7 @@ export const TaskList = () => {
       </View>
       <View style={styles.backgroundListCards}>
         <View style={styles.addCard}>
-          <TouchableOpacity onPress={addCard}>
+          <TouchableOpacity onPress={modalAddNewTask}>
             <Text style={styles.textAddCard}>Add a card</Text>
           </TouchableOpacity>
         </View>
@@ -60,9 +81,31 @@ export const TaskList = () => {
               onPress={() => setShowModal(!showModal)}>
               <Text style={styles.close}>X</Text>
             </Pressable>
-            <Text style={styles.newCard}> New card</Text>
-            <Text style={styles.newCard}> New card</Text>
-            <Text style={styles.newCard}> New card</Text>
+            <Text style={styles.newCard}> Task name:</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeTextName}
+              value={textName}
+            />
+            <Text style={styles.newCard}> Status:</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeTextStatus}
+              value={textStatus}
+            />
+            <Text style={styles.newCard}> Data:</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeTextData}
+              value={textData}
+            />
+            <View style={styles.containerCreate}>
+              <TouchableOpacity
+                style={styles.touchableButtonCreate}
+                onPress={addTask}>
+                <Text style={styles.textCreate}>Create</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -154,9 +197,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   newCard: {
-    marginBottom: 15,
+    marginBottom: 5,
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 18,
+  },
+  containerCreate: {
+    alignItems: 'center',
+    padding: 7,
+  },
+  touchableButtonCreate: {
+    backgroundColor: '#210440',
+    borderRadius: 10,
+    width: 130,
+    height: 30,
+    justifyContent: 'center',
+  },
+  textCreate: {
+    color: 'white',
     textAlign: 'center',
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
