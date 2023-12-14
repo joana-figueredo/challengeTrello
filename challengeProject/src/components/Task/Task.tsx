@@ -7,9 +7,10 @@ export type TaskProps = {
   status: string;
   date: string;
   style: {};
+  onPress: () => void;
 };
 
-export const Task = ({title, status, date, style}: TaskProps) => {
+export const Task = ({title, status, date, style, onPress}: TaskProps) => {
   return (
     <View style={[styles.card, style]}>
       <View style={styles.right}>
@@ -21,7 +22,7 @@ export const Task = ({title, status, date, style}: TaskProps) => {
         <TouchableOpacity>
           <Text style={styles.edit}>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPress}>
           <Text>Remove</Text>
         </TouchableOpacity>
       </View>

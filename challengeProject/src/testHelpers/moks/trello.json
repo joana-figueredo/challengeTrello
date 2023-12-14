@@ -1,25 +1,30 @@
 [
   {
+    "id": 1,
     "name": "Create prototypes",
     "status": "To do",
     "data": "12 december"
   },
   {
+    "id": 2,
     "name": "Fixed some bugs",
     "status": "In progress",
     "data": "12 december"
   },
   {
+    "id": 3,
     "name": "Test",
     "status": "Done",
     "data": "12 december"
   },
   {
+    "id": 4,
     "name": "Change some things",
     "status": "To do",
     "data": "12 december"
   },
   {
+    "id": 5,
     "name": "Environment",
     "status": "In progress",
     "data": "12 december"

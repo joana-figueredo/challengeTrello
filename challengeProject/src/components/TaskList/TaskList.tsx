@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 import {
   StyleSheet,
@@ -7,11 +7,27 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
+  Modal,
+  Pressable,
 } from 'react-native';
 import {Task} from '../Task/Task';
 import data from '../../testHelpers/moks/trello.json';
 
 export const TaskList = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [tasks, setTasks] = useState(data);
+
+  const addCard = () => {
+    setShowModal(true);
+  };
+
+  const removeCard = (id: number) => {
+    const filteredTasks = tasks.filter(item => {
+      return item.id !== id;
+    });
+    setTasks(filteredTasks);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="lightgreen" />
@@ -20,21 +36,36 @@ export const TaskList = () => {
       </View>
       <View style={styles.backgroundListCards}>
         <View style={styles.addCard}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={addCard}>
             <Text style={styles.textAddCard}>Add a card</Text>
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {data.map(item => (
+          {tasks.map(item => (
             <Task
               style={styles.task}
               title={item.name}
               status={item.status}
               date={item.data}
+              onPress={() => removeCard(item.id)}
             />
           ))}
         </ScrollView>
       </View>
+      <Modal animationType="slide" transparent={true} visible={showModal}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Pressable
+              style={styles.button}
+              onPress={() => setShowModal(!showModal)}>
+              <Text style={styles.close}>X</Text>
+            </Pressable>
+            <Text style={styles.newCard}> New card</Text>
+            <Text style={styles.newCard}> New card</Text>
+            <Text style={styles.newCard}> New card</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -85,5 +116,47 @@ const styles = StyleSheet.create({
   },
   task: {
     marginTop: 2,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    width: '80%',
+    backgroundColor: '#F0D6F9',
+    borderRadius: 20,
+    padding: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    paddingTop: 10,
+    paddingRight: 10,
+  },
+  close: {
+    textAlign: 'right',
+    fontSize: 15,
+    color: '#000000',
+    fontWeight: 'bold',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  newCard: {
+    marginBottom: 15,
+    fontWeight: 'bold',
+    fontSize: 20,
+    textAlign: 'center',
   },
 });
