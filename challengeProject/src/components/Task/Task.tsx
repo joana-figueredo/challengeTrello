@@ -1,26 +1,28 @@
 import React from 'react';
 
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  // StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  // ViewStyle,
+} from 'react-native';
+
+// type StylesType = StyleProp<ViewStyle>;
+// const styles: StylesType = {};
 
 export type TaskProps = {
   title: string;
   status: string;
   date: string;
-  style: {};
-  onPress: () => void;
+  onRemove: () => void;
   onEdit: () => void;
 };
 
-export const Task = ({
-  title,
-  status,
-  date,
-  style,
-  onPress,
-  onEdit,
-}: TaskProps) => {
+export const Task = ({title, status, date, onRemove, onEdit}: TaskProps) => {
   return (
-    <View style={[styles.card, style]}>
+    <View style={styles.card}>
       <View style={styles.right}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.status}>Status: {status}</Text>
@@ -30,7 +32,7 @@ export const Task = ({
         <TouchableOpacity onPress={onEdit}>
           <Text style={styles.edit}>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onRemove}>
           <Text>Remove</Text>
         </TouchableOpacity>
       </View>

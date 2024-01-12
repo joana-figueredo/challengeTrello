@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   StyleSheet,
@@ -12,75 +12,41 @@ import {
   TextInput,
 } from 'react-native';
 import {Task} from '../Task/Task';
+import {useTaskContext} from '../../context/TaskContext';
 import data from '../../testHelpers/moks/trello.json';
-
-type Tasks = {
-  id: number;
-  name: string;
-  status: string;
-  data: string;
-}[];
+import {FilterButton} from '../FilterButton/FilterButton';
 
 export const TaskList = () => {
-  const [showModal, setShowModal] = useState(false); //visibilidade do modal
-  const [tasks, setTasks] = useState<Tasks>(data); // armazena o array de tarefas, recebe os dados do json
-  const [taskId, setTaskId] = useState(0);
-  const [textName, onChangeTextName] = React.useState('');
-  const [textStatus, onChangeTextStatus] = React.useState('');
-  const [textData, onChangeTextData] = React.useState('');
-  const [isEditing, setIsEditing] = React.useState(false);
+  const {
+    modalAddNewTask,
+    addTask,
+    isEditing,
+    removeCard,
+    showModal,
+    editCard,
+    updateTask,
+    setShowModal,
+    onChangeTextStatus,
+    textName,
+    onChangeTextData,
+    textData,
+    onChangeTextName,
+    textStatus,
+  } = useTaskContext();
+  const [filtered, setFiltered] = useState(data);
+  const [filterSelected, setFilterSelected] = useState('all');
 
-  //função para mostrar o modal
-  const modalAddNewTask = () => {
-    setShowModal(true);
-  };
-  //função de adicionar task
-  const addTask = () => {
-    const maxId = Math.max(...tasks.map(task => task.id), 0); //vejo com o id maior
-    const newId = maxId + 1;
-    tasks.push({
-      id: newId,
-      data: textData,
-      name: textName,
-      status: textStatus,
-    });
-    setShowModal(false); // fecha a modal
-  };
-  //funcao de remover task
-  const removeCard = (id: number) => {
-    //riar um novo array que contém apenas os elementos do array original que não possue o mesmo id do id
-    const filteredTasks = tasks.filter(item => {
-      return item.id !== id;
-    });
-    setTasks(filteredTasks);
-  };
-  //funcao de editar task
-  const editCard = (id: number) => {
-    //modal está sendo usado para editar uma tarefa, não para adicionar uma nova.
-    setIsEditing(true);
-    //método find para procurar em tasks o id corresponde ao id
-    const taskToEdit = tasks.find(task => task.id === id);
-    //ae foi encontrado o id
-    if (taskToEdit) {
-      //abre o modal de edição
-      setShowModal(true);
-      setTaskId(id);
-      onChangeTextName(taskToEdit.name);
-      onChangeTextStatus(taskToEdit.status);
-      onChangeTextData(taskToEdit.data);
+  useEffect(() => {
+    filterList();
+  }, [filterSelected]);
+
+  const filterList = () => {
+    if (filterSelected === 'all') {
+      setFiltered(data);
+    } else {
+      const itens = data.filter(item => item.status === filterSelected);
+      setFiltered(itens);
     }
-  };
-  //funcao de update task
-  const updateTask = () => {
-    //método findIndex para encontrar o indice da tarefa no array
-    const index = tasks.findIndex(task => task.id === taskId);
-    //cópia do array tasks
-    const updatedTasks = [...tasks];
-    //atualiza o status da task no array
-    updatedTasks[index].status = textStatus;
-    //atualiza o tasks com a alteração
-    setTasks([...updatedTasks]);
-    setShowModal(false);
   };
 
   return (
@@ -89,6 +55,32 @@ export const TaskList = () => {
       <View style={styles.header}>
         <Text style={styles.yourTasks}>YOUR TASKS</Text>
       </View>
+      <View style={styles.containerOptions}>
+        <FilterButton
+          label={'All'}
+          color={'#2E2635'}
+          isSelected={filterSelected === 'All'}
+          onPress={() => setFilterSelected('all')}
+        />
+        <FilterButton
+          label={'To do'}
+          color={'#2E2635'}
+          isSelected={filterSelected === 'To do'}
+          onPress={() => setFilterSelected('To do')}
+        />
+        <FilterButton
+          label={'In Progress'}
+          color={'#2E2635'}
+          isSelected={filterSelected === 'In Progress'}
+          onPress={() => setFilterSelected('In Progress')}
+        />
+        <FilterButton
+          label={'Done'}
+          color={'#2E2635'}
+          isSelected={filterSelected === 'Done'}
+          onPress={() => setFilterSelected('Done')}
+        />
+      </View>
       <View style={styles.backgroundListCards}>
         <View style={styles.addCard}>
           <TouchableOpacity onPress={modalAddNewTask}>
@@ -96,13 +88,12 @@ export const TaskList = () => {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {tasks.map(item => (
+          {filtered.map(item => (
             <Task
-              style={styles.task}
               title={item.name}
               status={item.status}
               date={item.data}
-              onPress={() => removeCard(item.id)}
+              onRemove={() => removeCard(item.id)}
               onEdit={() => editCard(item.id)}
             />
           ))}
@@ -180,10 +171,31 @@ const styles = StyleSheet.create({
     fontSize: 40,
     textAlign: 'center',
   },
+  containerOptions: {
+    paddingTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  textToDo: {
+    marginHorizontal: 10,
+    fontWeight: '600',
+    color: '#F0D6F9',
+  },
+  textInProgress: {
+    marginHorizontal: 10,
+    fontWeight: '600',
+    color: '#F0D6F9',
+  },
+  textDone: {
+    marginHorizontal: 10,
+    fontWeight: '600',
+    color: '#F0D6F9',
+  },
   backgroundListCards: {
     backgroundColor: '#FFFFFF60',
     flex: 1,
-    margin: 15,
+    margin: 12,
   },
   addCard: {
     backgroundColor: '#F0D6F9',
